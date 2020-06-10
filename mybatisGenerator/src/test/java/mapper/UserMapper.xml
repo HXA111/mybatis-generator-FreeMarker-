@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IUserDAO">
+    <!--当前数据库字段名与实体类中属性名不一致时，需要显示定义字段映射 -->
+    <resultMap id="userResultMap" type="vo.User">
+        <id property="userName" column="userName"/>
+        <result property="password" column="password"/>
+        <result property="chrName" column="chrName"/>
+        <result property="role" column="role"/>
+    </resultMap>
+
+    <sql id="userColums">
+        userName,password,chrName,role
+    </sql>
+
+    <select id="getByUserName" parameterType="String" resultMap="userResultMap">
+        select
+        <include refid="userColums"></include>
+        from user
+        where userName=#{userName}
+    </select>
+
+    <select id="query" parameterType="vo.User" resultMap="userResultMap">
+        select
+        <include refid="userColums"></include>
+        from user
+        <where>
+            <if test="userName!=null">
+                and userName = #{userName}
+            </if>
+            <if test="password!=null">
+                and password = #{password}
+            </if>
+            <if test="chrName!=null">
+                and chrName = #{chrName}
+            </if>
+            <if test="role!=null">
+                and role = #{role}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="vo.User">
+        insert into user(<include refid="userColums"></include>)
+        values(#{userName},#{password},#{chrName},#{role})
+    </insert>
+
+    <update id="update" parameterType="vo.User">
+        update user
+        <set>
+            <if test="userName!=null">
+                userName = #{userName},
+            </if>
+            <if test="password!=null">
+                password = #{password},
+            </if>
+            <if test="chrName!=null">
+                chrName = #{chrName},
+            </if>
+            <if test="role!=null">
+                role = #{role}
+            </if>
+        </set>
+        where userName=#{userName}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete from
+        user
+        where userName=#{userName}
+    </delete>
+
+    <delete id="deleteCondition" parameterType="vo.User">
+        delete from
+        user
+        <where>
+            <if test="userName!=null">
+                and userName = #{userName}
+            </if>
+            <if test="password!=null">
+                and password = #{password}
+            </if>
+            <if test="chrName!=null">
+                and chrName = #{chrName}
+            </if>
+            <if test="role!=null">
+                and role = #{role}
+            </if>
+        </where>
+    </delete>
+
+</mapper>
+
